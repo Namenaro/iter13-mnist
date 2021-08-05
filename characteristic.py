@@ -1,23 +1,29 @@
+from logger import *
+
 class Characteristic:
     def __init__(self, dx, dy, u_radius, sens_field_radius, etalon):
         pass
 
-    def get_conditional_probs_bins(self, motif, pics):
+    def _count_conditional_probs_bins(self, motif, pics):
         pass
 
-    def get_unconditional_probs_bins(self, pics):
-        
+    def _count_unconditional_probs_bins(self, pics):
+        pass
 
-class CharacteristicFinder:
+    def quality(self):
+        pass
+
+
+class Characteristics:
     def __init__(self):
+        self.sorted = []
+
+    def add(self, characteristic):
         pass
 
-    def find(self, Xs, Ys, sens_radiuses):
+    def quality(self):
+        pass
 
-def find_next_candidtate():
-    pass
+    def draw(self, x , y, pic, logger):
+        pass
 
-def check_if_not_in_black_list():
-    pass
-
-#if a lot of. find nearest or rarest
