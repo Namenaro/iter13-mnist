@@ -18,12 +18,6 @@ class Unit: #управление на данный нейрон может бы
         self.unconditional_probability_of_match = self._count_unconditional_probability_of_match()
 
 
-    def grow_current_sprouts(self, pic, x, y, current_sprouts=None):
-        if isinstance(self.match_finder, PrimaryUnit):
-            pass
-        else:
-            pass
-
     def _count_unconditional_probability_of_match(self):
         # безусловная вероятность, что текущий эксперимент в отрыве от предыстории получит успех
         if isinstance(self.match_finder, PrimaryUnit):
@@ -39,13 +33,34 @@ class Unit: #управление на данный нейрон может бы
         return self.prev_neuron.unconditional_probability_of_match * current_experiment_success_probability
 
 
+class Match:
+    def __init__(self, unit, x,y):
+        self.unit = unit
+        self.x = x
+        self.y = y
+
+class Grower:
+    def __init__(self, start_unit, pic):
+        self.start_unit = start_unit
+        self.pic = pic
 
 
+    def try_start_history(self, x, y):
+        matches_coords_ranged = self.start_unit.match_finder.find_matches(self.pic, x, y)
 
+        if len(matches_coords_ranged) == 0:
+            return None # ни один росток не растет с самого начала
 
+        sprouts = []
+        for i in range(len(matches_coords_ranged)):
+            # добавляем ростков "единичной" высоты
+            x = matches_coords_ranged[i][0]
+            y = matches_coords_ranged[i][1]
+            match = Match(self.start_unit, x, y)
+            sprout = [match]   # росток это список матчей
+            sprouts.append(sprout)
+        return sprouts
 
-
-
-"""
-отсев ростков по достижении верхнего  (по максимуму правдоподобия характеристик)"""
-
+    def try_continue_history(self, sprouts):
+        if len(sprouts) == 0: # все имеющиеся на рассмотрении ростки пришли в тупик
+            return None
