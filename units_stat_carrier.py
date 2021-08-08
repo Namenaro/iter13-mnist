@@ -1,6 +1,5 @@
 class UnitStatCarrier:
-    def __init__(self, unit, characterisics):
-        self.unit = unit
+    def __init__(self, characterisics):
         self.characterisics = characterisics
 
         # копим просто все активации в виде списков:
