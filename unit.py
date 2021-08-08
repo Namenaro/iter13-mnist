@@ -11,9 +11,8 @@ class Unit: #управление на данный нейрон может бы
 
         self.match_finder = match_finder
 
-        self.characteristisc = None
-        self.label_hist = None
-        self.next_units = [] # упорядочены по предпочтительности
+        self.stat = None
+        self.next_unit = None
         self.prev_unit = prev_unit
         self.unconditional_probability_of_match = self._count_unconditional_probability_of_match()
 
@@ -67,14 +66,13 @@ class Recognizer:
         # выбираем ранее сработавший юнит, из которого сейчас будем "доращивать"
         best_sprout = current_sprouts[0]
         top_note = best_sprout[-1]
-        next_unit = top_note.unit.next_units[0] # TODO это умолчательная альтернатива
 
         # делаем проростки из места срабатывания предыдущего юнита в ростке
-        mini_sprouts = self.apply_unit(self, next_unit, top_note.x, top_note.y, pic)
+        mini_sprouts = self.apply_unit(self, top_note.unit.next_unit , top_note.x, top_note.y, pic)
 
         if len(mini_sprouts) == 0:
             # лучший росток пришел в тупик, удяляем из рассмотрения
-            current_sprouts.pop(0) # TODO если он вырос не до конца, возможно, это событие надо регать?
+            current_sprouts.pop(0) # TODO если он дорос до А, регать событие А?
         else:
             # удаляем лучший росток, и заменяем его на н штук новых сортированных лучших ростков
             # "на единицу" выше старого лучшего
@@ -98,12 +96,11 @@ class Recognizer:
 
         return Recognizer(start_unit=unit).recognize(x,y, pic)
 
-
     def is_top_sprout_ended(self, current_sprouts):
         best_sprout = current_sprouts[0]
         top_of_best_sprout = best_sprout[-1]
         last_unit = top_of_best_sprout.unit
-        if len(last_unit.next_units) == 0:
+        if last_unit.next_unit is None:
             return True
         return False
 
@@ -123,7 +120,7 @@ class Recognizer:
 
         while True:
             if len(current_sprouts) == 0:
-                return result_sprouts # TODO умолчательная альтернатива полностью рассмотрена
+                return result_sprouts
             self.move_ended_sprouts_to_results(current_sprouts, result_sprouts)
             self.grow_top_sprout(self, current_sprouts, pic)
 
